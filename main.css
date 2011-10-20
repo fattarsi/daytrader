@@ -1,0 +1,49 @@
+/*
+ Organization:
+ - Global classes at top in alphabetical order
+ - IDs in alphabetical order with sections indented (4 spaces)
+*/
+a:link, a:visited {
+    text-decoration:none;
+    color:#ccc;
+}
+
+#change {
+    position:absolute;
+    top:20px;
+    right:2px;
+}
+
+#container {
+    position:relative;
+    width:460px;
+    height:280px;
+    margin:auto;
+    border:1px outset;
+}
+
+#credits {
+    position:absolute;
+    bottom:-10px;
+    left:0px;
+    font-size:9px;
+    color:#ccc;
+}
+
+#graph {
+    border-right:1px solid #eee;
+}
+
+#price {
+    position:absolute;
+    top:2px;
+    right:2px;
+}
+
+#version {
+    position:absolute;
+    bottom:-10px;
+    right:0px;
+    font-size:9px;
+    color:#ccc;
+}
