@@ -3,6 +3,6 @@
  * Controls the state of the daytrader app
  */
 
-var MKT = new Market('graph', 1);
-MKT.start();
+var MKT = new Market('market-1', 'container', ['chris', 'caro']);
 
+MKT.start();

@@ -8,6 +8,54 @@ a:link, a:visited {
     color:#ccc;
 }
 
+.clear {
+    clear:both;
+}
+
+.market {
+    height:100%;
+}
+
+    .market canvas {
+        border-right:1px solid #eee;
+    }
+
+.priceDown {
+    color:red;
+}
+
+.priceUp {
+    color:green;
+}
+
+.sidebar {
+    position:absolute;
+    top:0px;
+    right:0px;
+    width:59px;
+    height:280px;
+    background-color:#eee;
+    border-top:1px solid #000;
+    border-left:1px solid #000;
+}
+
+.stock {
+    font-size:10px;
+    border-bottom:1px solid #000;
+}
+
+.stock-symbol {
+    float:left;
+}
+
+.stock-price {
+    float:right;
+}
+
+.stock-change {
+    float:left;
+}
+
 #change {
     position:absolute;
     top:20px;
@@ -28,10 +76,6 @@ a:link, a:visited {
     left:0px;
     font-size:9px;
     color:#ccc;
-}
-
-#graph {
-    border-right:1px solid #eee;
 }
 
 #price {
