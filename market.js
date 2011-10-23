@@ -4,7 +4,7 @@
  */
 
 //defaults
-DELAY=100;
+DELAY=1000;
 INITIAL_PRICE=120;
 STEP_SIZE=4;
 
@@ -61,6 +61,13 @@ Market.prototype.addInvestor = function (investor) {
     
     //set investor cash
     node = document.createElement('div');
+    node.setAttribute('id', inv_id+'-cash');
+    elm.appendChild(node);
+    node.innerHTML = investor.cash;
+    
+    //worth
+    node = document.createElement('div');
+    node.setAttribute('id', inv_id+'-worth');
     elm.appendChild(node);
     node.innerHTML = investor.cash;
     
@@ -72,31 +79,31 @@ Market.prototype.addInvestor = function (investor) {
         
         //symbol
         node = document.createElement('div');
+        node.setAttribute('id', inv_id+'-symbol-'+key);
         node.setAttribute('class', 'investor-symbol');
         outer.appendChild(node);
         node.innerHTML = this.stocks[key].symbol + 'x';
         
         //qty
         node = document.createElement('div');
+        node.setAttribute('id', inv_id+'-qty-'+key);
         node.setAttribute('class', 'investor-qty');
         outer.appendChild(node);
         node.innerHTML = investor.qtyOf(this.stocks[key]);
         
         //buy / sell buttons
         node = document.createElement('button');
-        //node.setAttribute('onclick', 'stockBuy('+investor_number+',\''+key+'\', 1)');
-        node.onclick = function () {th.stockBuy();}
+        node.onclick = function () {th.stockBuy(investor_number,key,1);}
         outer.appendChild(node);
         node.innerHTML = 'buy';
         
         node = document.createElement('button');
-        node.setAttribute('onclick', 'stockSell('+investor_number+',\''+key+'\', 1)');
+        node.onclick = function () {th.stockSell(investor_number,key,1);}
         outer.appendChild(node);
         node.innerHTML = 'sell';
     }
     
-    
-    
+    this.updateInvestorData();
     
 }
 
@@ -142,6 +149,11 @@ Market.prototype.clear = function () {
     }
 }
 
+//return the price of stock given its symbol
+Market.prototype.priceOf = function (sym) {
+    return this.stocks[sym].price;
+}
+
 //start a day
 Market.prototype.start = function () {
     this.time = 0;
@@ -150,8 +162,40 @@ Market.prototype.start = function () {
     this.tick();
 }
 
+//purchase stock
 Market.prototype.stockBuy = function (investor_number, symbol, qty) {
-    alert(this.u_id);
+    //get price
+    var price = this.stocks[symbol].price;
+    var totalPrice = price * qty;
+    
+    //get investor and check if can afford purchase
+    var investor = this.investors[investor_number];
+    if (!investor.canAfford(totalPrice)) {
+        return;
+    }
+    
+    //purchase
+    investor.debit(totalPrice);
+    investor.portfolio.add(symbol,qty);
+    
+    this.updateInvestorData();
+    
+}
+
+//sell stock
+Market.prototype.stockSell = function (investor_number, symbol, qty) {
+    //get price
+    var price = this.stocks[symbol].price;
+    var totalPrice = price * qty;
+    
+    //get investor
+    var investor = this.investors[investor_number];
+    
+    //purchase
+    investor.credit(totalPrice);
+    investor.portfolio.del(symbol,qty);
+    
+    this.updateInvestorData();    
 }
 
 //market pulse to update all stocks
@@ -163,5 +207,34 @@ Market.prototype.tick = function () {
         }
         this.time += STEP_SIZE;
         setTimeout(function(thisObj) {thisObj.tick();}, DELAY, this);
+    }
+    
+    this.updateInvestorData();
+}
+
+//update investor cash, qty data
+Market.prototype.updateInvestorData = function () {
+    for (var i=0 ; i<this.investors.length ; i++) {
+        var inv = this.investors[i];
+        var inv_id = this.u_id+'_investor-1';
+        var worth = 0;
+        
+        //cash
+        var node = document.getElementById(inv_id+'-cash');
+        node.innerHTML = inv.cash;
+        
+        worth = inv.cash;
+        
+        for (var sym in inv.portfolio.stocks) {        
+            //qty
+            node = document.getElementById(inv_id+'-qty-'+sym);
+            node.innerHTML = inv.qtyOf(sym);
+            
+            worth += inv.qtyOf(sym) * this.priceOf(sym);
+        }
+        
+        node = document.getElementById(inv_id+'-worth');
+        node.innerHTML = Math.round(worth*100)/100;
+
     }
 }
