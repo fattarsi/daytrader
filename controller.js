@@ -10,5 +10,5 @@ var INV = new Investor('chris', 1000);
 MKT.addInvestor(INV);
 //MKT2.addInvestor(INV);
 
-MKT.start();
+//MKT.start();
 //MKT2.start();

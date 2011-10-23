@@ -6,10 +6,11 @@
 //defaults
 VOLITILE=true;
 DELTA_RANGE=20;
+INITIAL_PRICE=120;
 COLORS = new Array("black", "blue", "gray", "purple", "brown");
 
  // constructor
-function Stock(u_id, container_id, canvas, symbol, initial) {
+function Stock(u_id, container_id, canvas, symbol) {
     this.u_id = u_id;
     this.container_id = container_id;
     this.symbol_id = this.u_id+'_symbol';
@@ -28,11 +29,11 @@ function Stock(u_id, container_id, canvas, symbol, initial) {
     }
     
     //stock cannot be below 0, if so it is bust
-    if (initial <= 0) {
+    if (INITIAL_PRICE <= 0) {
         this.price = 0;
         this.is_bust = true;
     } else {
-        this.price = initial;
+        this.price = INITIAL_PRICE;
         this.is_bust = false;
     }
     
@@ -49,7 +50,7 @@ function Stock(u_id, container_id, canvas, symbol, initial) {
     this.ymax = canvas.getAttribute('height');
     
     this.xpos = 0;
-    this.ypos = this.ymax - initial;
+    this.ypos = this.ymax - INITIAL_PRICE;
     this.line.moveTo(this.xpos, this.ypos);
     
     
@@ -89,6 +90,11 @@ Stock.prototype.buildHtml = function () {
     
 }
 
+Stock.prototype.newDay = function () {
+    this.line.clearRect(0,0,this.xmax,this.ymax);
+    this.xpos = 0;
+}
+
 //update graph to current state of stock
 Stock.prototype.plot = function () {
     this.ypos = this.ymax - this.price;
@@ -106,10 +112,13 @@ Stock.prototype.priceChange = function() {
     return this.last_change;
 }
 
-//reset stock for a new day
+//reset stock price
 Stock.prototype.reset = function () {
-    this.line.clearRect(0,0,this.xmax,this.ymax);
-    this.xpos = 0;
+    this.price = INITIAL_PRICE;
+    this.delta_range = DELTA_RANGE;
+    this.is_bust = false;
+    this.last_change = 0;
+    this.newDay();
 }
 
 //update stock price and graph

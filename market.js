@@ -5,7 +5,6 @@
 
 //defaults
 DELAY=1000;
-INITIAL_PRICE=120;
 STEP_SIZE=4;
 
 // constructer
@@ -29,7 +28,7 @@ function Market(u_id, container_id, stock_symbols) {
     //create stocks
     this.stocks = new Object();
     for (var i=0 ; i<stock_symbols.length ; i++) {
-        this.stocks[stock_symbols[i]] = new Stock(this.u_id+'_stock-'+i, this.stock_container_id, this.canvas, stock_symbols[i], INITIAL_PRICE);
+        this.stocks[stock_symbols[i]] = new Stock(this.u_id+'_stock-'+i, this.stock_container_id, this.canvas, stock_symbols[i]);
     }
 }
 
@@ -109,6 +108,7 @@ Market.prototype.addInvestor = function (investor) {
 
 //build html for a market, append to id=this.container_id
 Market.prototype.buildHtml = function () {
+    var th = this;
     var parent = document.getElementById(this.container_id);
     
     //market container
@@ -128,6 +128,18 @@ Market.prototype.buildHtml = function () {
     node.setAttribute('id', this.stock_container_id);
     sidebar.appendChild(node);
     
+    //start button
+    node = document.createElement('button');
+    node.onclick = function () {th.start();}
+    sidebar.appendChild(node);
+    node.innerHTML = 'start';
+    
+    //reset button
+    node = document.createElement('button');
+    node.onclick = function () {th.reset();}
+    sidebar.appendChild(node);
+    node.innerHTML = 'reset';
+    
     //container for investers
     node = document.createElement('div');
     node.setAttribute('id', this.investor_container_id);
@@ -144,9 +156,7 @@ Market.prototype.buildHtml = function () {
 
 //clear the canvas
 Market.prototype.clear = function () {
-    for (var key in this.stocks) {
-        this.stocks[key].reset();
-    }
+    
 }
 
 //return the price of stock given its symbol
@@ -154,11 +164,25 @@ Market.prototype.priceOf = function (sym) {
     return this.stocks[sym].price;
 }
 
+//reset market
+Market.prototype.reset = function () {
+    this.time = 0;
+    this.is_open = false;
+    this.day = 0;
+    for (var sym in this.stocks) {
+        this.stocks[sym].reset();
+    }
+    this.clear();
+}
+
 //start a day
 Market.prototype.start = function () {
     this.time = 0;
     this.clear();
     this.is_open = true;
+    for (var sym in this.stocks) {
+        this.stocks[sym].newDay();
+    }
     this.tick();
 }
 
@@ -191,6 +215,11 @@ Market.prototype.stockSell = function (investor_number, symbol, qty) {
     //get investor
     var investor = this.investors[investor_number];
     
+    //if investor doesnt own stock, return
+    if (investor.qtyOf(symbol) <= 0) {
+        return;
+    }
+    
     //purchase
     investor.credit(totalPrice);
     investor.portfolio.del(symbol,qty);
@@ -200,7 +229,7 @@ Market.prototype.stockSell = function (investor_number, symbol, qty) {
 
 //market pulse to update all stocks
 Market.prototype.tick = function () {
-    if (this.time < this.timeInDay) {
+    if (this.time < this.timeInDay && this.is_open) {
         //update stocks
         for (var key in this.stocks) {
             this.stocks[key].step(STEP_SIZE);
