@@ -192,6 +192,11 @@ Market.prototype.stockBuy = function (investor_number, symbol, qty) {
     var price = this.stocks[symbol].price;
     var totalPrice = price * qty;
     
+    //cannot buy if stock is bust
+    if (this.stocks[symbol].is_bust) {
+        return;
+    }
+    
     //get investor and check if can afford purchase
     var investor = this.investors[investor_number];
     if (!investor.canAfford(totalPrice)) {
@@ -254,10 +259,17 @@ Market.prototype.updateInvestorData = function () {
         
         worth = inv.cash;
         
+        //iterate through stocks in portfolio
+        //update worth
+        //if stock is bust, remove shares
         for (var sym in inv.portfolio.stocks) {        
             //qty
             node = document.getElementById(inv_id+'-qty-'+sym);
             node.innerHTML = inv.qtyOf(sym);
+            
+            if (this.stocks[sym].is_bust) {
+                inv.portfolio.del(sym, inv.qtyOf(sym));
+            }
             
             worth += inv.qtyOf(sym) * this.priceOf(sym);
         }

@@ -92,6 +92,7 @@ Stock.prototype.buildHtml = function () {
 
 Stock.prototype.newDay = function () {
     this.line.clearRect(0,0,this.xmax,this.ymax);
+    this.delta_range = DELTA_RANGE;
     this.xpos = 0;
 }
 
