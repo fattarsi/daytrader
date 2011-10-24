@@ -16,6 +16,8 @@ function Stock(u_id, container_id, canvas, symbol) {
     this.symbol_id = this.u_id+'_symbol';
     this.price_id = this.u_id+'_price';
     this.change_id = this.u_id+'_change';
+    this.shiftUp = 0;
+    this.history = new Array();
     this.buildHtml();
     
     this.symbol = symbol;
@@ -51,6 +53,7 @@ function Stock(u_id, container_id, canvas, symbol) {
     
     this.xpos = 0;
     this.ypos = this.ymax - INITIAL_PRICE;
+    this.threshold = Math.round(this.ymax * .10 * 100) / 100;
     this.line.moveTo(this.xpos, this.ypos);
     
     
@@ -91,16 +94,20 @@ Stock.prototype.buildHtml = function () {
 }
 
 Stock.prototype.newDay = function () {
-    this.line.clearRect(0,0,this.xmax,this.ymax);
     this.delta_range = DELTA_RANGE;
+    //this.drawHistory();
+    this.history = new Array();
     this.xpos = 0;
 }
 
 //update graph to current state of stock
 Stock.prototype.plot = function () {
     this.ypos = this.ymax - this.price;
-    this.line.lineTo(this.xpos, this.ypos);
-    this.line.stroke();
+    this.history.push([this.xpos,this.ypos]);
+    this.line.fillText(this.price, this.xpos - (40 * this.xpos/this.xmax), this.ypos+this.shiftUp);
+    this.drawHistory();
+    //this.line.lineTo(this.xpos, this.ypos);
+    //this.line.stroke();
 }
 
 //return a change in stock price based on delta range and volitility
@@ -113,8 +120,23 @@ Stock.prototype.priceChange = function() {
     return this.last_change;
 }
 
+//drawHistory line from history
+Stock.prototype.drawHistory = function () {
+    this.line.beginPath();
+    this.line.strokeStyle = this.color;
+    for(var i=0 ; i<this.history.length ; i++) {
+        this.line.lineTo(this.history[i][0],this.history[i][1]+this.shiftUp);
+    }
+    
+    this.line.stroke();
+}
+
 //reset stock price
 Stock.prototype.reset = function () {
+    this.xpos = 0;
+    this.ypos = this.ymax - INITIAL_PRICE;
+    this.line.moveTo(this.xpos, this.ypos);
+
     this.price = INITIAL_PRICE;
     this.delta_range = DELTA_RANGE;
     this.is_bust = false;
