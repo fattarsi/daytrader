@@ -4,11 +4,13 @@
  */
 
 //defaults
-DELAY=10;
+DELAY=1000;
 STEP_SIZE=5;
 
 // constructer
 function Market(u_id, container_id, stock_symbols) {
+    var th = this;
+    this.delay = DELAY;
     this.day = 1;
     this.time = 0;
     this.is_open = false;
@@ -36,6 +38,10 @@ function Market(u_id, container_id, stock_symbols) {
     }
     
     this.drawGridLines();
+    
+    if (this.number_of_stocks == 1) {
+        //this.canvas.addEventListener("click",function () {th.trade(th);} , false);
+    }
 }
 
 //adds an existing investor to the market
@@ -146,6 +152,29 @@ Market.prototype.buildHtml = function () {
     sidebar.appendChild(node);
     node.innerHTML = 'reset';
     
+    //speed controls
+    node = document.createElement('div');
+    node.setAttribute('class', 'clear');
+    sidebar.appendChild(node);
+    
+    node = document.createElement('div');
+    node.setAttribute('class', 'button');
+    node.onclick = function () {th.speedSlower();}
+    sidebar.appendChild(node);
+    node.innerHTML = '<';
+    
+    node = document.createElement('div');
+    node.setAttribute('class', 'button');
+    node.onclick = function () {th.speedPause();}
+    sidebar.appendChild(node);
+    node.innerHTML = 'pause';
+    
+    node = document.createElement('div');
+    node.setAttribute('class', 'button');
+    node.onclick = function () {th.speedFaster();}
+    sidebar.appendChild(node);
+    node.innerHTML = '>';
+    
     //container for investers
     node = document.createElement('div');
     node.setAttribute('id', this.investor_container_id);
@@ -184,7 +213,6 @@ Market.prototype.drawGridLines = function () {
     
     this.context.stroke();
 }
-
 //return the price of stock given its symbol
 Market.prototype.priceOf = function (sym) {
     return this.stocks[sym].price;
@@ -199,6 +227,22 @@ Market.prototype.reset = function () {
         this.stocks[sym].reset();
     }
     this.clear();
+}
+
+//Functions to control market speed
+Market.prototype.speedFaster = function () {
+    this.delay /= 5;
+}
+
+Market.prototype.speedPause = function () {
+    this.is_open = (this.is_open) ? false : true;
+    if (this.is_open) {
+        this.tick();
+    }
+}
+
+Market.prototype.speedSlower = function () {
+    this.delay *= 5;
 }
 
 //start a day
@@ -283,7 +327,7 @@ Market.prototype.tick = function () {
             }
         }
         this.time += STEP_SIZE;
-        setTimeout(function(thisObj) {thisObj.tick();}, DELAY, this);
+        setTimeout(function(thisObj) {thisObj.tick();}, this.delay, this);
     } else {
         this.is_open = false;
     }
