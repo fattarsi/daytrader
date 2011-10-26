@@ -5,6 +5,7 @@
 
 //defaults
 VOLITILE=true;
+VOLITILE_LEVEL=1;
 DELTA_RANGE=20;
 INITIAL_PRICE=120;
 COLORS = new Array("black", "blue", "gray", "purple", "brown");
@@ -113,7 +114,7 @@ Stock.prototype.plot = function () {
 //return a change in stock price based on delta range and volitility
 Stock.prototype.priceChange = function() {
     if (this.is_volitile) {
-        this.delta_range += Math.floor(Math.random() * 1) -1;
+        this.delta_range += Math.floor(Math.random() * VOLITILE_LEVEL) -VOLITILE_LEVEL;
     }
     this.last_change = (Math.random() * this.delta_range) - this.delta_range/2;
     this.last_change = Math.round(this.last_change*100) / 100;
