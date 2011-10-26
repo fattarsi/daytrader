@@ -212,6 +212,28 @@ Market.prototype.clear = function () {
     this.drawGridLines();
 }
 
+//click to trade only works if there is one stock, so
+//it will assume user is referring to first one
+//buy stock if touched above or equal to current stock price
+//sell if stock is below current stock price
+Market.prototype.clickToTrade = function (e) {
+    var elm = document.getElementById(this.container_id);
+    var location = getLocation(elm,e);
+    var price;
+    var sym;
+    for (var sym in this.stocks) {
+        price = this.stocks[sym].ypos+this.stocks[sym].shiftUp;
+        sym=sym;
+        break;
+    }
+    
+    if(location[1] <= price) {
+        this.stockBuy(0,sym,1);
+    } else {
+        this.stockSell(0,sym,1);
+    }
+}
+
 Market.prototype.drawGridLines = function () {
     this.context.beginPath();
     this.context.strokeStyle = '#eee';
@@ -350,28 +372,6 @@ Market.prototype.tick = function () {
     }
     
     this.updateInvestorData();
-}
-
-//click to trade only works if there is one stock, so
-//it will assume user is referring to first one
-//buy stock if touched above or equal to current stock price
-//sell if stock is below current stock price
-Market.prototype.clickToTrade = function (e) {
-    var elm = document.getElementById(this.container_id);
-    var location = getLocation(elm,e);
-    var price;
-    var sym;
-    for (var sym in this.stocks) {
-        price = this.stocks[sym].ypos;
-        sym=sym;
-        break;
-    }
-    
-    if(location[1] <= price) {
-        this.stockBuy(0,sym,1);
-    } else {
-        this.stockSell(0,sym,1);
-    }
 }
 
 //update investor cash, qty data
