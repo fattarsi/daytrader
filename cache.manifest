@@ -1,9 +1,14 @@
 CACHE MANIFEST
-# 0.1.2
+# 0.1.3
 controller.js
+faster.png
+icon.png
 index.html
 investor.js
 main.css
 market.js
+pause.png
+play.png
 portfolio.js
+slower.png
 stock.js

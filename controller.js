@@ -3,12 +3,7 @@
  * Controls the state of the daytrader app
  */
 
-var MKT = new Market('market-1', 'container', ['goog']);
-var INV = new Investor('chris', 1000);
-//var MKT2 = new Market('market-2', 'container', ['appl']);
+var MKT = new Market('market-1', 'container', ['shares']);
+var INV = new Investor('investor', 1000);
 
 MKT.addInvestor(INV);
-//MKT2.addInvestor(INV);
-
-//MKT.start();
-//MKT2.start();

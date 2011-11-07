@@ -4,6 +4,7 @@
  */
 
 //defaults
+OSD=true;
 VOLITILE=true;
 VOLITILE_LEVEL=1;
 DELTA_RANGE=20;
@@ -52,7 +53,7 @@ function Stock(u_id, container_id, canvas, symbol) {
     this.xmax = canvas.getAttribute('width');
     this.ymax = canvas.getAttribute('height');
     
-    this.xpos = 0;
+    this.xpos = -STEP_SIZE;
     this.ypos = this.ymax - INITIAL_PRICE;
     this.threshold = Math.round(this.ymax * .10 * 100) / 100;
     this.line.moveTo(this.xpos, this.ypos);
@@ -95,20 +96,26 @@ Stock.prototype.buildHtml = function () {
 }
 
 Stock.prototype.newDay = function () {
+    this.xpos = 0;
     this.delta_range = DELTA_RANGE;
     //this.drawHistory();
     this.history = new Array();
-    this.xpos = 0;
+    this.history.push([this.xpos,this.ypos]);
+    this.line.moveTo(this.xpos, this.ypos);
 }
 
 //update graph to current state of stock
 Stock.prototype.plot = function () {
     this.ypos = this.ymax - this.price;
     this.history.push([this.xpos,this.ypos]);
-    this.line.fillText(this.price, this.xpos - (40 * this.xpos/this.xmax), this.ypos+this.shiftUp);
-    this.drawHistory();
-    //this.line.lineTo(this.xpos, this.ypos);
-    //this.line.stroke();
+    if (OSD) {
+        this.line.fillText(this.price, this.xpos - (40 * this.xpos/this.xmax), this.ypos+this.shiftUp);
+        this.drawHistory();
+    } else {
+        this.line.lineTo(this.xpos, this.ypos+this.shiftUp);
+        this.line.stroke(); 
+    }
+
 }
 
 //return a change in stock price based on delta range and volitility
@@ -116,7 +123,7 @@ Stock.prototype.priceChange = function() {
     if (this.is_volitile) {
         this.delta_range += Math.floor(Math.random() * VOLITILE_LEVEL) -VOLITILE_LEVEL;
     }
-    this.last_change = (Math.random() * this.delta_range) - this.delta_range/2;
+    this.last_change = (Math.random() * this.delta_range) - (this.delta_range/2);
     this.last_change = Math.round(this.last_change*100) / 100;
     return this.last_change;
 }
@@ -149,8 +156,9 @@ Stock.prototype.reset = function () {
 Stock.prototype.step = function(step) {
     this.line.beginPath();
     this.line.strokeStyle = this.color;
-    this.line.moveTo(this.xpos, this.ypos);
-    if (this.xpos + step > this.xmax) {
+    this.line.moveTo(this.xpos, this.ypos+this.shiftUp);
+    if (this.xpos >= this.xmax) {
+        this.plot();
         return;
     } else {
         this.xpos += step;
