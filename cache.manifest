@@ -1,5 +1,6 @@
 CACHE MANIFEST
-# 0.1.3
+# 0.1.4
+close.png
 controller.js
 faster.png
 icon.png
@@ -10,5 +11,6 @@ market.js
 pause.png
 play.png
 portfolio.js
+settings.png
 slower.png
 stock.js

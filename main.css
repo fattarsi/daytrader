@@ -16,7 +16,6 @@ a:link, a:visited {
 .button {
     cursor:pointer;
     float:left;
-    margin-right:2px;
 }
 
 .canvas {
@@ -34,7 +33,7 @@ a:link, a:visited {
 .control-container {
     position:absolute;
     top:4px;
-    left:108px;
+    left:127px;
 }
 
 .clear {
@@ -46,6 +45,7 @@ a:link, a:visited {
     height:20px;
     background:url('faster.png') no-repeat;
     margin-top:2px;
+    margin-left:9px;
 }
 
 .investor-container {
@@ -76,17 +76,42 @@ a:link, a:visited {
         border-right:1px solid #eee;
     }
 
+.modal-container {
+    position:absolute;
+    top:5px;
+    left:5px;
+    z-index:100;
+    color:#000;
+    width:450px;
+    height:270px;
+    border:1px outset;
+    background-color:rgba(255,255,255,.98);
+    font-size:14px;
+    color:#bdbdbd;
+}
+
+.modal-container-close {
+    position:absolute;
+    top:2px;
+    right:2px;
+    width:24px;
+    height:24px;
+    background-image:url('close.png');
+}
+
 .pause {
     width:20px;
     height:19px;
     margin:auto;
     background:url('pause.png') no-repeat;
+    margin-left:13px;
 }
 
 .play {
     width:20px;
     height:19px;
     background:url('play.png') no-repeat;
+    margin-left:13px;
 }
 
 .priceDown {
@@ -95,6 +120,23 @@ a:link, a:visited {
 
 .priceUp {
     color:green;
+}
+
+.reset {
+    position:absolute;
+    bottom:0px;
+    left:0px;
+}
+
+.settings {
+    position:absolute;
+    bottom:0px;
+    right:0px;
+    opacity:0.25;
+    cursor:pointer;
+    width:24px;
+    height:24px;
+    background:url('settings.png') no-repeat;
 }
 
 .sidebar {
@@ -115,7 +157,6 @@ a:link, a:visited {
 }
 
 .stock {
-    border-right:1px solid #000;
     float:left;
 }
 
@@ -125,6 +166,7 @@ a:link, a:visited {
 
 .stock-price {
     float:right;
+    margin-left:4px;
 }
 
 .stock-change {

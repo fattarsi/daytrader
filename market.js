@@ -10,6 +10,24 @@ STEP_SIZE=5;
 CANVAS_WIDTH=459;
 CANVAS_HEIGHT=250;
 
+function hide(id) {
+  document.getElementById(id).style.display = 'none';
+}
+
+function show(id) {
+  document.getElementById(id).style.display = '';
+}
+
+//toggle visibility of an id
+function toggle(id) {
+  if (document.getElementById(id).style.display == 'none') {
+    document.getElementById(id).style.display = '';
+  } else {
+    document.getElementById(id).style.display = 'none';
+  }
+}
+
+
 //return x,y coordinates of e
 function getLocation(elm,e) {
     var x;
@@ -45,6 +63,7 @@ function Market(u_id, container_id, stock_symbols) {
     this.investor_container_id = this.u_id+'_investors';
     this.play_control_id = this.u_id+'_play-control';
     this.stock_container_id = this.u_id+'_stocks';
+    this.modal = this.u_id+'_modal';
     this.buildHtml();
     
     this.canvas = document.getElementById(this.canvas_id);
@@ -118,7 +137,7 @@ Market.prototype.addInvestor = function (investor) {
         node.setAttribute('id', inv_id+'-symbol-'+key);
         node.setAttribute('class', 'investor-symbol');
         outer.appendChild(node);
-        node.innerHTML = this.stocks[key].symbol + 'x';
+        node.innerHTML = this.stocks[key].symbol + '&nbsp;x&nbsp;';
         
         //qty
         node = document.createElement('div');
@@ -165,12 +184,6 @@ Market.prototype.buildHtml = function () {
     node.setAttribute('id', this.stock_container_id);
     sidebar.appendChild(node);
     
-    //reset button
-    node = document.createElement('button');
-    node.onclick = function () {th.reset();}
-    sidebar.appendChild(node);
-    node.innerHTML = 'reset';
-    
     //speed controls
     var controls = document.createElement('div');
     controls.setAttribute('class', 'control-container');
@@ -206,6 +219,33 @@ Market.prototype.buildHtml = function () {
     canvas.setAttribute('width',CANVAS_WIDTH);
     canvas.setAttribute('height',CANVAS_HEIGHT);
     mkt.appendChild(canvas);
+    
+    //settings button
+    node = document.createElement('div');
+    node.setAttribute('class', 'settings');
+    node.onclick = function () {th.settingsOpen();}
+    mkt.appendChild(node);
+    
+    //modal
+    modal = document.createElement('div');
+    modal.setAttribute('id', this.modal);
+    modal.setAttribute('class', 'modal-container');
+    modal.style.display = 'none';
+    mkt.appendChild(modal);
+    
+    //close button for modal
+    node = document.createElement('div');
+    node.setAttribute('class', 'modal-container-close');
+    node.onclick = function () {th.settingsClose();}
+    modal.appendChild(node);
+    
+    //reset button
+    node = document.createElement('button');
+    node.setAttribute('class', 'reset');
+    node.onclick = function () {th.reset();}
+    modal.appendChild(node);
+    node.innerHTML = 'reset';
+    
 }
 
 //clear the canvas
@@ -293,6 +333,16 @@ Market.prototype.reset = function () {
         this.stocks[sym].reset();
     }
     this.clear();
+}
+
+//Hide the settings screen
+Market.prototype.settingsClose = function () {
+    hide(this.modal);
+}
+
+//Show the settings screen
+Market.prototype.settingsOpen = function () {
+    show(this.modal);
 }
 
 //Functions to control market speed
