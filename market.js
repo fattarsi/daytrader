@@ -97,7 +97,10 @@ Market.prototype.addInvestor = function (investor) {
     //reference to investor container
     var container = document.getElementById(this.investor_container_id);
     
-    var inv_id = this.u_id+'_investor-1';
+    //reference to canvas container
+    var mkt = document.getElementById(this.u_id);
+
+	var inv_id = this.u_id+'_investor-1';
     
     //add investor node
     var elm = document.createElement('div');
@@ -148,13 +151,15 @@ Market.prototype.addInvestor = function (investor) {
 
         //buy / sell buttons
         node = document.createElement('button');
+        node.setAttribute('class', 'button-buy');
         node.onclick = function () {th.stockBuy(investor_number,key,1);}
-        outer.appendChild(node);
+        mkt.appendChild(node);
         node.innerHTML = 'buy';
         
         node = document.createElement('button');
+        node.setAttribute('class', 'button-sell');
         node.onclick = function () {th.stockSell(investor_number,key,1);}
-        outer.appendChild(node);
+        mkt.appendChild(node);
         node.innerHTML = 'sell';
     }
     
@@ -233,7 +238,12 @@ Market.prototype.buildHtml = function () {
     modal.style.display = 'none';
     mkt.appendChild(modal);
     
-    //close button for modal
+    node = document.createElement('span');
+    node.setAttribute('id', 'credits');
+    node.innerHTML = '<a href="http://chrisfattarsi.com">chrisfattarsi.com</a>';
+    modal.appendChild(node);
+
+	//close button for modal
     node = document.createElement('div');
     node.setAttribute('class', 'modal-container-close');
     node.onclick = function () {th.settingsClose();}

@@ -18,6 +18,18 @@ a:link, a:visited {
     float:left;
 }
 
+.button-buy {
+    position:absolute;
+    bottom:0px;
+    left:0px;
+}
+
+.button-sell {
+    position:absolute;
+    bottom:0px;
+    right:0px;
+}
+
 .canvas {
     position:absolute;
     top:29px;
@@ -51,9 +63,8 @@ a:link, a:visited {
 .investor-container {
     position:absolute;
     top:0px;
-    right:0px;
-    border:1px solid #000;
-    width:240px;
+    right:28px;
+    width:187px;
     height:26px;
 }
 
@@ -130,7 +141,7 @@ a:link, a:visited {
 
 .settings {
     position:absolute;
-    bottom:0px;
+    top:0px;
     right:0px;
     opacity:0.25;
     cursor:pointer;
@@ -196,11 +207,13 @@ a:link, a:visited {
 
 #credits {
     position:absolute;
-    bottom:-10px;
-    left:0px;
-    font-size:9px;
-    color:#ccc;
+    bottom:0px;
+    right:0px;
+    font-size:10px;
 }
+    #credits a:link, #credits a:visited {
+        color:#000;
+    }
 
 #price {
     position:absolute;
